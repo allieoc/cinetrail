@@ -2,6 +2,9 @@ import React, {useEffect, useState} from 'react'
 import './Slider.css'
 import axios from 'axios'
 import {MdKeyboardArrowRight, MdKeyboardArrowLeft} from 'react-icons/md'
+import Genres from '../Genres/Genres'
+import Rating from '../Rating/Rating'
+import { Link } from 'react-router-dom'
 
 function Slider({ apiKey, baseUrl }) {
 
@@ -10,6 +13,8 @@ function Slider({ apiKey, baseUrl }) {
 
     const [index, setIndex] = useState(0);
     //we will de/increment the index to click through the movies
+
+    const [movieRatings, setMovieRatings] = useState([]);
 
     const imageBaseUrl = import.meta.env.VITE_IMAGE_BASE_URL
 
@@ -21,7 +26,9 @@ function Slider({ apiKey, baseUrl }) {
             //inspect our page to find out where our data is
             //console.log(res.data.results)
             //confirmed our data is in res.data.results, now we save it in state
-            setUpcomingMovies(res.data.results)
+            setUpcomingMovies(res.data.results);
+            const ratings = res.data.results.map(movie => movie.vote_average / 2);
+            setMovieRatings(ratings);
         })
     }, []);
 
@@ -31,7 +38,8 @@ function Slider({ apiKey, baseUrl }) {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         height: "60vh",
-        position: "relative"
+        position: "relative",
+        marginTop: "60px"
     };
 
     const handleRight = () => {
@@ -57,7 +65,16 @@ function Slider({ apiKey, baseUrl }) {
             <div className="slider-info">
                 <h1>{upcomingMovies[index]?.title}</h1>
                 <p className="slider-description">{upcomingMovies[index]?.overview.slice(0, 130)}...</p>
+                <Genres
+                    movieGenres={upcomingMovies[index]?.genre_ids} 
+                    apiKey={apiKey} 
+                    baseUrl={baseUrl}
+                />
                 <p>Release Date: {upcomingMovies[index]?.release_date}</p>
+                <Rating movieRating={movieRatings[index]} />
+                <Link to={`/moviedetails/${upcomingMovies[index]?.id}`} 
+                    className="see-details">See Details
+                </Link>
             </div>
         </div>
 
