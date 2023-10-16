@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import './Genres.css'
 import axios from 'axios'
 
-function Genres({movieGenres, apiKey, baseUrl}) {
+function Genres({movieGenres, apiKey, baseUrl, component}) {
     //console.log("MovieGenres" + movieGenres)
 
     //console.log(`${baseUrl}/genre/movie/list?api_key=${apiKey}`)
@@ -13,7 +13,6 @@ function Genres({movieGenres, apiKey, baseUrl}) {
         const fetchGenres = async() => {
             try{
                 const res = await axios.get(`${baseUrl}/genre/movie/list?api_key=${apiKey}`)
-                //console.log(res.data.genres)
                 setAllGenres(res.data.genres)
             }
             catch(err){

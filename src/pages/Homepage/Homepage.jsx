@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import './Homepage.css'
 import Slider from '../../components/Slider/Slider'
 import axios from 'axios'
 import MovieCard from '../../components/MovieCard/MovieCard'
+import { ThemeContext } from '../../contexts/ThemeContext'
 
 function Homepage({ apiKey, baseUrl }) {
-
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const [popularMovies, setPopularMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [page, setPage] = useState(1);
@@ -48,7 +49,7 @@ function Homepage({ apiKey, baseUrl }) {
   }
 
   return (
-    <div className="homepage-container">
+    <div className={`homepage-container ${!darkMode && "home-light"}`}>
       <Slider apiKey={apiKey} baseUrl={baseUrl} />
       <div className="movies-wrapper">
         <div className="popular-container">
@@ -83,7 +84,7 @@ function Homepage({ apiKey, baseUrl }) {
         <div className="top-rated-container">
           <h3>Top Rated Movies</h3>
           <div className="top-rated-cards-wrapper">
-            {topRatedMovies.map((movie) => {
+            {topRatedMovies.slice(0, 10).map((movie) => {
               return (
                 <MovieCard
                   height="100px"
@@ -94,7 +95,7 @@ function Homepage({ apiKey, baseUrl }) {
                   key={movie?.id}
                   radius="8px"
                 />
-              );
+              )
             })}
           </div>
         </div>
